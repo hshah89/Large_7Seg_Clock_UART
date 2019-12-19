@@ -377,29 +377,30 @@ void loop()
     get_time();
     get_temp_humid();
 
-    if(_second_>=0 && _second_ <45){
-      Serial.print(hour_tens);
-      Serial.print(hour_ones);
-      Serial.print(":");
-      Serial.print(min_tens);
-      Serial.print(min_ones);
-      Serial.print(":");
-      Serial.print(sec_tens);
-      Serial.print(sec_ones);
-      Serial.print("\n");
+    Serial.print(hour_tens);
+    Serial.print(hour_ones);
+    Serial.print(":");
+    Serial.print(min_tens);
+    Serial.print(min_ones);
+    Serial.print(":");
+    Serial.print(sec_tens);
+    Serial.print(sec_ones);
+    Serial.print(",");
+    Serial.print(temp_tens);
+    Serial.print(temp_ones);
+    Serial.print(", ");
+    Serial.print(humid_tens);
+    Serial.print(humid_ones);
+    Serial.print("\n");
+
+    if (_second_ >= 0 && _second_ < 45)
+    {
       digit_show(hour_tens, hour_ones, min_tens, min_ones, red_time, green_time, blue_time);
     }
-    else if(_second_>=45 && _second_ <=59){
-      
-      Serial.print(temp_tens);
-      Serial.print(temp_ones);
-      Serial.print(", ");
-      Serial.print(humid_tens);
-      Serial.print(humid_ones);
-      Serial.print("\n");
+    else if (_second_ >= 45 && _second_ <= 59)
+    {
       digit_show(temp_tens, temp_ones, degree, unit_f, red_temp, green_temp, blue_temp);
     }
-    
   }
 
   if (millis() > time_3 + 5)
@@ -408,11 +409,17 @@ void loop()
     read_serial_port();
   }
 
-  if (millis() > time_4 + 5e3)
+  if (millis() > time_4 + 1e3)
   {
     time_4 = millis();
     int sample = analogRead(A0);
-    //Serial.println(sample);
+    Serial.println(sample);
+    if(sample > 900){
+       FastLED.setBrightness(1);
+    }
+    else{
+       FastLED.setBrightness(255);
+    }
   }
 
   // put your main code here, to run repeatedly:
