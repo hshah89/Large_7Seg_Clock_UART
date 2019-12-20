@@ -1,6 +1,7 @@
 #include "RTClib.h"
 #include "Adafruit_Si7021.h"
 #include <FastLED.h>
+#include <EEPROM.h>
 
 #define BAUD_RATE 115200
 #define yes 2
@@ -10,6 +11,15 @@
 
 #define degree 11
 #define unit_f 12
+
+#define r_time_loc 0
+#define g_time_loc 1
+#define b_time_loc 2
+
+#define r_temp_loc 3
+#define g_temp_loc 4
+#define b_temp_loc 5
+
 RTC_PCF8523 rtc;
 Adafruit_Si7021 sensor = Adafruit_Si7021();
 CRGB leds[NUM_LEDS];
@@ -91,6 +101,7 @@ char *time_color_str = "color_time";
 char *temp_color_str = "color_temp";
 char *humid_color_str = "humid_temp";
 char *date_str = "date";
+char *save_str = "save";
 
 void setup()
 {
@@ -112,6 +123,27 @@ void setup()
   //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   //rtc.adjust(DateTime(2021, 11, 7, 1, 59, 50));
   // put your setup code here, to run once:
+
+  red_time = EEPROM.read(r_time_loc);
+  green_time = EEPROM.read(g_time_loc);
+  blue_time = EEPROM.read(b_time_loc);
+
+  red_temp = EEPROM.read(r_temp_loc);
+  green_temp = EEPROM.read(g_temp_loc);
+  blue_temp = EEPROM.read(b_temp_loc);
+
+  Serial.print(red_time);
+  Serial.print(", ");
+  Serial.print(green_time);
+  Serial.print(", ");
+  Serial.print(blue_time);
+  Serial.print(", ");
+
+  Serial.print(red_temp);
+  Serial.print(", ");
+  Serial.print(green_temp);
+  Serial.print(", ");
+  Serial.print(blue_temp);
 }
 
 bool DST_check(int month, int dayOfWeek, int hour, int minute, int second)
@@ -292,6 +324,19 @@ void read_serial_port()
       Serial.println("Color Set");
     }
 
+    if (strcmp(command, save_str) == 0)
+    {
+      EEPROM.write(r_time_loc, red_time);
+      EEPROM.write(g_time_loc, green_time);
+      EEPROM.write(b_time_loc, blue_time);
+
+      EEPROM.write(r_temp_loc, red_temp);
+      EEPROM.write(g_temp_loc, green_temp);
+      EEPROM.write(b_temp_loc, blue_temp);
+
+      Serial.println("Colors Saved");
+    }
+
     y = 0;
     done = false;
 
@@ -377,21 +422,21 @@ void loop()
     get_time();
     get_temp_humid();
 
-    Serial.print(hour_tens);
-    Serial.print(hour_ones);
-    Serial.print(":");
-    Serial.print(min_tens);
-    Serial.print(min_ones);
-    Serial.print(":");
-    Serial.print(sec_tens);
-    Serial.print(sec_ones);
-    Serial.print(",");
-    Serial.print(temp_tens);
-    Serial.print(temp_ones);
-    Serial.print(", ");
-    Serial.print(humid_tens);
-    Serial.print(humid_ones);
-    Serial.print("\n");
+    // Serial.print(hour_tens);
+    // Serial.print(hour_ones);
+    // Serial.print(":");
+    // Serial.print(min_tens);
+    // Serial.print(min_ones);
+    // Serial.print(":");
+    // Serial.print(sec_tens);
+    // Serial.print(sec_ones);
+    // Serial.print(",");
+    // Serial.print(temp_tens);
+    // Serial.print(temp_ones);
+    // Serial.print(", ");
+    // Serial.print(humid_tens);
+    // Serial.print(humid_ones);
+    // Serial.print("\n");
 
     if (_second_ >= 0 && _second_ < 45)
     {
@@ -403,7 +448,7 @@ void loop()
     }
   }
 
-  if (millis() > time_3 + 5)
+  if (millis() > time_3 + 20)
   {
     time_3 = millis();
     read_serial_port();
@@ -413,12 +458,14 @@ void loop()
   {
     time_4 = millis();
     int sample = analogRead(A0);
-    Serial.println(sample);
-    if(sample > 900){
-       FastLED.setBrightness(1);
+    // Serial.println(sample);
+    if (sample > 900)
+    {
+      FastLED.setBrightness(1);
     }
-    else{
-       FastLED.setBrightness(255);
+    else
+    {
+      FastLED.setBrightness(255);
     }
   }
 
