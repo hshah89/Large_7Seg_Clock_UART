@@ -144,6 +144,7 @@ void setup()
   Serial.print(green_temp);
   Serial.print(", ");
   Serial.print(blue_temp);
+  Serial.print("\n");
 }
 
 bool DST_check(int month, int dayOfWeek, int hour, int minute, int second)
@@ -422,21 +423,21 @@ void loop()
     get_time();
     get_temp_humid();
 
-    // Serial.print(hour_tens);
-    // Serial.print(hour_ones);
-    // Serial.print(":");
-    // Serial.print(min_tens);
-    // Serial.print(min_ones);
-    // Serial.print(":");
-    // Serial.print(sec_tens);
-    // Serial.print(sec_ones);
-    // Serial.print(",");
-    // Serial.print(temp_tens);
-    // Serial.print(temp_ones);
-    // Serial.print(", ");
-    // Serial.print(humid_tens);
-    // Serial.print(humid_ones);
-    // Serial.print("\n");
+    Serial.print(hour_tens);
+    Serial.print(hour_ones);
+    Serial.print(":");
+    Serial.print(min_tens);
+    Serial.print(min_ones);
+    Serial.print(":");
+    Serial.print(sec_tens);
+    Serial.print(sec_ones);
+    Serial.print(",");
+    Serial.print(temp_tens);
+    Serial.print(temp_ones);
+    Serial.print(", ");
+    Serial.print(humid_tens);
+    Serial.print(humid_ones);
+    Serial.print("\n");
 
     if (_second_ >= 0 && _second_ < 45)
     {
