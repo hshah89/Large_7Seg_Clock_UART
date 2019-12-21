@@ -462,7 +462,7 @@ void loop()
     // Serial.println(sample);
     if (sample > 900)
     {
-      FastLED.setBrightness(1);
+      FastLED.setBrightness(25);
     }
     else
     {
